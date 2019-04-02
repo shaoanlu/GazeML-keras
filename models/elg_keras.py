@@ -38,7 +38,11 @@ class KerasELG():
         for i in range(self._hg_num_modules):
             prefix = f"hourglass_hg_{str(i+1)}"
             x = self._build_hourglass(x, steps_to_go=4, f=self._hg_num_feature_maps, name=prefix)
-            x, h = self._build_hourglass_after(x_prev, x, do_merge=(i<(self._hg_num_modules-1)), name=prefix)
+            x, h = self._build_hourglass_after(
+                x_prev, 
+                x, 
+                do_merge=(i<(self._hg_num_modules-1)), n
+                ame=prefix)
             x_prev = x
         x = h
         outputs['heatmaps'] = x
@@ -53,10 +57,6 @@ class KerasELG():
     
     def _apply_pool(self, x, k=2, s=2):
         return MaxPooling2D(pool_size=k, strides=s, padding="same")(x)
-    
-    def _reflect_padding_2d(self, x, pad=1):
-        x = Lambda(lambda x: tf.pad(x, [[0, 0], [pad, pad], [pad, pad], [0, 0]], mode='REFLECT'))(x)
-        return x
     
     def _build_residual_block(self, x, f, name="res_block"):
         num_in = x.shape.as_list()[-1]
@@ -107,7 +107,11 @@ class KerasELG():
             low3 = self._build_residual_block(low3, f, name=prefix_name+f"_low3_{str(i+1)}")
             
         # Upsample
-        up2 = Lambda(lambda x: tf.image.resize_bilinear(x[0], x[1].shape.as_list()[1:3], align_corners=True))([low3, up1])
+        up2 = Lambda(
+            lambda x: tf.image.resize_bicubic(
+                x[0],
+                x[1].shape.as_list()[1:3], 
+                align_corners=True))([low3, up1]) # default resize_bilear
         
         out = Add()([up1, up2])
         return out
@@ -116,7 +120,10 @@ class KerasELG():
         prefix_name = name+"_after"
         
         for j in range(self._hg_num_residual_blocks):
-            x_now = self._build_residual_block(x_now, self._hg_num_feature_maps, name=prefix_name+f"_after_hg_{str(j+1)}")
+            x_now = self._build_residual_block(
+                x_now, 
+                self._hg_num_feature_maps, 
+                name=prefix_name+f"_after_hg_{str(j+1)}")
         x_now = self._apply_conv(x_now, self._hg_num_feature_maps, k=1, s=1, name=prefix_name)
         x_now = self._apply_bn(x_now, name=prefix_name+"_BatchNorm")
         x_now = Activation('relu')(x_now)
@@ -126,8 +133,18 @@ class KerasELG():
         x_next = x_now
         if do_merge:
             prefix_name = name
-            x_hmaps = self._apply_conv(h, self._hg_num_feature_maps, k=1, s=1, name=prefix_name+"_merge_h")
-            x_now = self._apply_conv(x_now, self._hg_num_feature_maps, k=1, s=1, name=prefix_name+"_merge_x")
+            x_hmaps = self._apply_conv(
+                h, 
+                self._hg_num_feature_maps, 
+                k=1, 
+                s=1, 
+                name=prefix_name+"_merge_h")
+            x_now = self._apply_conv(
+                x_now, 
+                self._hg_num_feature_maps, 
+                k=1, 
+                s=1, 
+                name=prefix_name+"_merge_x")
             x_add = Add()([x_prev, x_hmaps])
             x_next = Add()([x_next, x_add])
         return x_next, h
