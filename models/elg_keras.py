@@ -41,8 +41,8 @@ class KerasELG():
             x, h = self._build_hourglass_after(
                 x_prev, 
                 x, 
-                do_merge=(i<(self._hg_num_modules-1)), n
-                ame=prefix)
+                do_merge=(i<(self._hg_num_modules-1)), 
+                name=prefix)
             x_prev = x
         x = h
         outputs['heatmaps'] = x
