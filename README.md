@@ -1,5 +1,7 @@
 # GazeML-keras
-A keras port of [swook/GazeML](https://github.com/swook/GazeML) for eye region landmarks detection
+A keras port of [swook/GazeML](https://github.com/swook/GazeML) for eye region landmarks detection. 
+
+The dlib face detector is replaced by MTCNN.
 
 ## Demo
 
@@ -17,5 +19,10 @@ A keras port of [swook/GazeML](https://github.com/swook/GazeML) for eye region l
 
 2. Gaze estimation has not been ported yet.
 
+## Dependency
+- python 3.6
+- keras 2.2.4
+- tensorflow 1.12.0
+
 ## Acknoledgement
-ELG model weights are converted from the official repo [swook/GazeML](https://github.com/swook/GazeML).
+ELG model weights are converted from the official repo [swook/GazeML](https://github.com/swook/GazeML). We learnt a lot from there.
