@@ -17,7 +17,7 @@ The dlib face detector is replaced by MTCNN.
 ## WIP
 1. Heatmaps predictions are slightly worse than official tensorflow implementation.
 
-2. Gaze estimation has not been ported yet.
+2. Model training as well as gaze estimation has not been ported yet.
 
 ## Dependency
 - python 3.6
