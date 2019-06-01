@@ -15,7 +15,7 @@ The dlib face detector is replaced by MTCNN.
 ![](https://github.com/shaoanlu/GazeML-keras/raw/master/results/result_reiwa.png)
 
 ## WIP
-1. The preprocessing is very different from the [official implementation](https://github.com/swook/GazeML/blob/master/src/datasources/frames.py#L223), thus the results produced are suboptimal.
+1. The preprocessing is very different (including not flipping left eye) from the [official implementation](https://github.com/swook/GazeML/blob/master/src/datasources/frames.py#L223), thus the results produced are suboptimal.
 
 2. Model training as well as gaze estimation has not been ported yet.
 
